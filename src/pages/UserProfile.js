@@ -1,15 +1,34 @@
+// UserProfile.js
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 function UserProfile() {
-    return(
-        <>
-        <header>
-            <NavBar />
-            </header>
-            <mai>
-                <h1>User Profile</h1>
-            </mai>
-            </>
-    );
+  const [user, setUser] = useState({});
+  const params = useParams();
+  const userId = params.id;
+
+  useEffect(() =>{
+    fetch(`http://localhost:4000/users/${userId}`)
+    .then(r => r.json())
+    .then(data => setUser(data))
+    .catch(error => console.error(error));
+  }, [userId]);
+
+  if(!user.name){
+    return <h1>Loading...</h1>;
+  };
+
+  return(
+    <>
+      <header>
+        <NavBar />
+      </header>
+      <main>
+        <h1>{user.name}</h1>
+      </main>
+    </>
+  );
 };
+
 export default UserProfile;
